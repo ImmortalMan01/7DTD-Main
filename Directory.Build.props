@@ -5,8 +5,8 @@
 		<TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
 		<WarningLevel>4</WarningLevel>
 		<ErrorReport>prompt</ErrorReport>
-		<IntermediateOutputPath>T:\Temp\vsBuild\SingelBuild\$(SolutionName)\$(Platform)\$(Configuration)\Intermediate\$(MSBuildProjectName)\</IntermediateOutputPath>
-		<OutputPath>T:\Temp\vsBuild\SingelBuild\$(SolutionName)\$(Platform)\$(Configuration)\</OutputPath>
+                <IntermediateOutputPath>$(MSBuildThisFileDirectory)build\$(SolutionName)\$(Platform)\$(Configuration)\Intermediate\$(MSBuildProjectName)\</IntermediateOutputPath>
+                <OutputPath>$(MSBuildThisFileDirectory)build\$(SolutionName)\$(Platform)\$(Configuration)\</OutputPath>
 
 	</PropertyGroup>
 
