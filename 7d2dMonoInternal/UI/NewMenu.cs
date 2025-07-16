@@ -162,6 +162,13 @@ namespace SevenDTDMono
             if (drawMenu)
             {
                 windowRect = GUILayout.Window(windowID, windowRect, Window, "7Days To Die Mod Menü",customStyle); //draws main menu
+                var watermarkStyle = new GUIStyle(GUI.skin.label)
+                {
+                    alignment = TextAnchor.LowerRight,
+                    normal = { textColor = Color.gray }
+                };
+                GUI.Label(new Rect(windowRect.x + 5, windowRect.y + windowRect.height - 20,
+                                   windowRect.width - 10, 20), "Made by. ImmortalMan", watermarkStyle);
             }
             // Create a new GUIStyle based on the default GUI.skin.box
             // Set the desired background color for the box
