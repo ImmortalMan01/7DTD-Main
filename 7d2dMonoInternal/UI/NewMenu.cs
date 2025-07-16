@@ -161,7 +161,7 @@ namespace SevenDTDMono
 
             if (drawMenu)
             {
-                windowRect = GUILayout.Window(windowID, windowRect, Window, "7Days To Die Cheat Menu",customStyle); //draws main menu
+                windowRect = GUILayout.Window(windowID, windowRect, Window, "7Days To Die Mod Menü",customStyle); //draws main menu
             }
             // Create a new GUIStyle based on the default GUI.skin.box
             // Set the desired background color for the box
