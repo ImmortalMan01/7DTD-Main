@@ -50,8 +50,6 @@ namespace SevenDTDMono.Features
                 referenceForward = Camera.main.transform.forward;
             }
 
-            float maxAngle = SettingsInstance.AimbotFov * 0.5f;
-
             foreach (EntityAlive zombie in NewSettings.EntityAlive)
             {
                 if (zombie == null || !zombie.IsAlive())
@@ -60,12 +58,12 @@ namespace SevenDTDMono.Features
                 }
 
                 Vector3 target = GetTargetPosition(zombie);
-                Vector3 direction = target - referencePos;
-                float angle = Vector3.Angle(referenceForward, direction);
-                if (angle > maxAngle)
+                if (!IsWithinFov(target))
                 {
                     continue;
                 }
+                Vector3 direction = target - referencePos;
+                float angle = Vector3.Angle(referenceForward, direction);
                 if (angle < minAngle)
                 {
                     minAngle = angle;
@@ -137,6 +135,33 @@ namespace SevenDTDMono.Features
                 default:
                     return basePos + Vector3.up * height * 0.9f;
             }
+        }
+
+        /// <summary>
+        /// Checks if the given world position is inside the configured aimbot FOV.
+        /// Uses screen space distance so the FOV circle and targeting logic match.
+        /// </summary>
+        private static bool IsWithinFov(Vector3 worldPos)
+        {
+            if (!Camera.main)
+            {
+                return true;
+            }
+
+            Vector3 screen = Camera.main.WorldToScreenPoint(worldPos);
+            if (screen.z <= 0f)
+            {
+                return false;
+            }
+
+            Vector2 center = new Vector2(Screen.width / 2f, Screen.height / 2f);
+            Vector2 pos2D = new Vector2(screen.x, screen.y);
+
+            float angleRatio = Mathf.Tan(SettingsInstance.AimbotFov * Mathf.Deg2Rad * 0.5f) /
+                               Mathf.Tan(Camera.main.fieldOfView * Mathf.Deg2Rad * 0.5f);
+            float maxDist = (Screen.height / 2f) * angleRatio;
+
+            return Vector2.Distance(pos2D, center) <= maxDist;
         }
     }
 }
