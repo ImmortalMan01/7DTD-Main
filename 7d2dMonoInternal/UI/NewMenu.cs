@@ -1002,7 +1002,7 @@ namespace SevenDTDMono
 
 
                                     GUILayout.Label("EXPERIMENTAL ", centeredLabelStyle);
-                                    SETT.aimbot = GUILayout.Toggle(SETT.aimbot, "Aimbot (L-alt)");
+                                    NewGUILayout.ButtonToggleDictionary("Aimbot (L-alt)", nameof(SettingsBools.AIMBOT));
                                     SETT.magicBullet = GUILayout.Toggle(SETT.magicBullet, "Magic Bullet(L-alt");
 
                                 });
