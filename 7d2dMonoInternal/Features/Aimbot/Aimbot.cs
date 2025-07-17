@@ -85,7 +85,17 @@ namespace SevenDTDMono.Features
 
             if (lockedZombie != null && lockedZombie.IsAlive())
             {
-                bestZombie = lockedZombie;
+                // Verify the locked target still meets FOV and line of sight requirements
+                Vector3 lockedTarget = GetTargetPositionSimple(lockedZombie);
+                if (IsWithinFov(lockedTarget) &&
+                    HasLineOfSight(referencePos, lockedTarget, lockedZombie))
+                {
+                    bestZombie = lockedZombie;
+                }
+                else
+                {
+                    lockedZombie = null;
+                }
             }
             else
             {
