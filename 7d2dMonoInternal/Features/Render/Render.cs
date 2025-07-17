@@ -130,6 +130,19 @@ namespace SevenDTDMono.Features.Render
                 RenderUtils.DrawCircle(new Color32(30, 144, 255, 255), new Vector2(Screen.width / 2, Screen.height / 2), radius);
             }
 
+            if (SettingsInstance.GetBoolValue(nameof(SettingsBools.SHOW_FOV)))
+            {
+                float radius = 150f;
+                if (Camera.main)
+                {
+                    float angleRatio = Mathf.Tan(SettingsInstance.AimbotFov * Mathf.Deg2Rad * 0.5f) /
+                                       Mathf.Tan(Camera.main.fieldOfView * Mathf.Deg2Rad * 0.5f);
+                    radius = (Screen.height / 2f) * angleRatio;
+                }
+
+                RenderUtils.DrawCircle(Color.red, new Vector2(Screen.width / 2, Screen.height / 2), radius);
+            }
+
             if (SettingsInstance.GetBoolValue(nameof(SettingsBools.BULLET_PATH)) && Aimbot.HasTarget && Camera.main)
             {
                 Vector3 startScreen = Camera.main.WorldToScreenPoint(Aimbot.StartPos);

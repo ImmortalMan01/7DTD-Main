@@ -20,9 +20,10 @@ F7 default for UnityExplorer. rekomended to set to other button since 7dtd use f
 6. Infinite ammo
 7. Toggle creative mode and debug mode +
 8. Crosshair, toggleable FOV circle
-9. Bullet path debug line for aimbot
-10. Speedhack
-11. Teleport to players / zombies Also Kill Players /Zombies
+9. Show Fov overlay to visualize aimbot FOV
+10. Bullet path debug line for aimbot
+11. Speedhack
+12. Teleport to players / zombies Also Kill Players /Zombies
 12. Level up
 13. Add 10 skill points
 14. Health and stamina  // you can still take damage! this only makes regen as same phase as loss

@@ -19,6 +19,7 @@ namespace SevenDTDMono
         ZOMBIE_CORNER_BOX,
         ZOMBIE_BOX,
         FOV_CIRCLE,
+        SHOW_FOV,
         CROSS_HAIR,
         NO_WEAPON_BOB,
         NO_RECOIL,

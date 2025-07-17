@@ -485,6 +485,8 @@ namespace SevenDTDMono
                         SettingsInstance.AimbotFov = GUILayout.HorizontalSlider(SettingsInstance.AimbotFov, 10f, 120f, GUILayout.Width(150));
                         GUILayout.EndHorizontal();
 
+                        NewGUILayout.ButtonToggleDictionary("Show Fov", nameof(SettingsBools.SHOW_FOV));
+
                     }, ref aimbotSettingsDropdown);
                 }
             });
