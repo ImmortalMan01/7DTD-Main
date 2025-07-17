@@ -489,6 +489,14 @@ namespace SevenDTDMono
 
                         NewGUILayout.ButtonToggleDictionary("Show Fov", nameof(SettingsBools.SHOW_FOV));
 
+                        string[] modes = System.Enum.GetNames(typeof(AimbotMode));
+                        int modeSelected = (int)SettingsInstance.SelectedAimbotMode;
+                        int newMode = GUILayout.Toolbar(modeSelected, modes);
+                        if (newMode != modeSelected)
+                        {
+                            SettingsInstance.SelectedAimbotMode = (AimbotMode)newMode;
+                        }
+
                     }, ref aimbotSettingsDropdown);
                 }
             });
