@@ -32,6 +32,7 @@ namespace SevenDTDMono
         AIMBOT,
         MAGIC_BULLET,
         BULLET_PATH,
-        SHOW_TARGET
+        SHOW_TARGET,
+        MOVEMENT_PREDICTION
     }
 }

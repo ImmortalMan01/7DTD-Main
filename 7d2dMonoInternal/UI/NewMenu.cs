@@ -473,6 +473,7 @@ namespace SevenDTDMono
                         NewGUILayout.ButtonToggleDictionary("Magic Bullet", nameof(SettingsBools.MAGIC_BULLET));
                         NewGUILayout.ButtonToggleDictionary("Bullet Path", nameof(SettingsBools.BULLET_PATH));
                         NewGUILayout.ButtonToggleDictionary("Show Target", nameof(SettingsBools.SHOW_TARGET));
+                        NewGUILayout.ButtonToggleDictionary("Movement Prediction", nameof(SettingsBools.MOVEMENT_PREDICTION));
                         string[] targets = System.Enum.GetNames(typeof(AimbotTarget));
                         int selected = (int)SettingsInstance.SelectedAimbotTarget;
                         int newSelected = GUILayout.Toolbar(selected, targets);
