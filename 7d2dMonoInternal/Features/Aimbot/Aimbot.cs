@@ -42,6 +42,11 @@ namespace SevenDTDMono.Features
         // Currently locked target while the activation key is held
         private EntityAlive lockedZombie = null;
 
+        // Rotation calculated in Update and applied in LateUpdate so the
+        // camera does not get overridden by other scripts
+        private Quaternion pendingRotation;
+        private bool hasPendingRotation = false;
+
         private void Update()
         {
             // Refresh projectile speed from the currently held weapon so that
@@ -143,12 +148,9 @@ namespace SevenDTDMono.Features
 
                 if (SettingsInstance.SelectedAimbotMode == AimbotMode.Normal)
                 {
-                    // Instantly rotate the player and camera to face the target
-                    Player.transform.rotation = look;
-                    if (Camera.main)
-                    {
-                        Camera.main.transform.rotation = look;
-                    }
+                    // Queue the rotation so it can be applied in LateUpdate.
+                    pendingRotation = look;
+                    hasPendingRotation = true;
                 }
                 else if (SettingsInstance.SelectedAimbotMode == AimbotMode.Silent && Input.GetMouseButtonDown(0))
                 {
@@ -168,6 +170,19 @@ namespace SevenDTDMono.Features
                 if (zombie != null)
                 {
                     previousPositions[zombie.entityId] = zombie.transform.position;
+                }
+            }
+        }
+
+        private void LateUpdate()
+        {
+            if (hasPendingRotation)
+            {
+                hasPendingRotation = false;
+                Player.transform.rotation = pendingRotation;
+                if (Camera.main)
+                {
+                    Camera.main.transform.rotation = pendingRotation;
                 }
             }
         }
