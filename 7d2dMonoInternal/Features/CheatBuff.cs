@@ -87,10 +87,6 @@ namespace SevenDTDMono.Features
                             Values = new float[] { 20}
                             //Set other properties of PassiveEffect if needed
                         }
-                    },
-                    PassivesIndex = new List<PassiveEffects>
-                    {
-                        PassiveEffects.None,
                     }
                 }
 

@@ -435,14 +435,7 @@ namespace SevenDTDMono.Features
                                  Values = new float[] { 9999 },
                                  //Set other properties if needed
                             }
-                    },
-                    PassivesIndex = new List<PassiveEffects>
-                        {
-                             PassiveEffects.WalkSpeed,
-                             PassiveEffects.BlockDamage,
-                             PassiveEffects.CraftingTime,
-                             PassiveEffects.FoodGain,
-                        }
+                    }
                 }
 
             };
@@ -517,14 +510,6 @@ namespace SevenDTDMono.Features
                                  Values = new float[] { 9999 },
                                  //Set other properties if needed
                             }
-                        },
-     
-                        PassivesIndex = new List<PassiveEffects>
-                        {
-                             PassiveEffects.WalkSpeed,
-                             PassiveEffects.BlockDamage,
-                             PassiveEffects.CraftingTime,
-                             PassiveEffects.FoodGain,
                         }
 
                     }
@@ -584,10 +569,7 @@ namespace SevenDTDMono.Features
                    OwnerTiered = true,
                    PassiveEffects = new List<PassiveEffect>
                    {
-                   },
-                   PassivesIndex = new List<PassiveEffects>
-                       {
-                       }
+                   }
                }
             };
             //O._minEffectController.PassivesIndex = new HashSet<PassiveEffects>();
