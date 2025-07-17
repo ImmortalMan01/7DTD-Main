@@ -83,11 +83,12 @@ namespace SevenDTDMono.Features
                     continue;
                 }
 
-                // Use the current, unadjusted position when checking the FOV so
-                // the on-screen circle matches the selection logic.  Including
-                // prediction and bullet drop caused the aimbot to ignore valid
-                // targets near the crosshair.
-                Vector3 target = GetTargetPositionSimple(zombie);
+                // Use the fully adjusted target position when checking the FOV
+                // so that movement prediction and bullet drop compensation are
+                // taken into account. Using the raw entity position caused the
+                // aimbot to only activate when the crosshair was directly over
+                // the zombie even if it was clearly inside the FOV circle.
+                Vector3 target = GetTargetPosition(zombie);
                 if (!IsWithinFov(target))
                 {
                     continue;
@@ -240,33 +241,6 @@ namespace SevenDTDMono.Features
             return target;
         }
 
-        /// <summary>
-        /// Returns the entity position for FOV checks without bullet drop or
-        /// movement prediction. Using the raw position ensures the on-screen
-        /// FOV circle matches the selection logic.
-        /// </summary>
-        private static Vector3 GetTargetPositionSimple(EntityAlive entity)
-        {
-            float height = GetEntityHeight(entity);
-            Vector3 basePos = entity.transform.position;
-            Vector3 target;
-
-            switch (SettingsInstance.SelectedAimbotTarget)
-            {
-                case AimbotTarget.Chest:
-                    target = basePos + Vector3.up * height * 0.5f;
-                    break;
-                case AimbotTarget.Feet:
-                    target = basePos + Vector3.up * height * 0.1f;
-                    break;
-                default:
-                    Transform head = entity.emodel?.GetHeadTransform();
-                    target = head != null ? head.position : basePos + Vector3.up * height * 0.9f;
-                    break;
-            }
-
-            return target;
-        }
 
         // Returns true if there is a clear line of sight from the origin to the
         // target position. Uses a raycast to detect any blocking colliders and
