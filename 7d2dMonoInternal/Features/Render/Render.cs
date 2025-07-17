@@ -143,6 +143,18 @@ namespace SevenDTDMono.Features.Render
                 RenderUtils.DrawCircle(Color.red, new Vector2(Screen.width / 2, Screen.height / 2), radius);
             }
 
+            if (SettingsInstance.GetBoolValue(nameof(SettingsBools.SHOW_TARGET)) &&
+                Aimbot.HasTarget && Input.GetKey(KeyCode.LeftAlt) && Camera.main)
+            {
+                Vector3 targetScreen = Camera.main.WorldToScreenPoint(Aimbot.TargetPos);
+                if (RenderUtils.IsOnScreen(targetScreen))
+                {
+                    Vector2 pos = new Vector2(targetScreen.x, Screen.height - targetScreen.y);
+                    RenderUtils.DrawCircle(Color.black, pos, 6f);
+                    RenderUtils.DrawCircle(Color.green, pos, 5f);
+                }
+            }
+
             if (SettingsInstance.GetBoolValue(nameof(SettingsBools.BULLET_PATH)) && Aimbot.HasTarget && Camera.main)
             {
                 Vector3 startScreen = Camera.main.WorldToScreenPoint(Aimbot.StartPos);
