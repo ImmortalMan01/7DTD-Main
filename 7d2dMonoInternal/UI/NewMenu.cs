@@ -8,6 +8,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using static PassiveEffect;
+using SETT = SevenDTDMono.NewSettings;
 
 
 
@@ -1002,8 +1003,7 @@ namespace SevenDTDMono
 
 
                                     GUILayout.Label("EXPERIMENTAL ", centeredLabelStyle);
-                                    SETT.aimbot = GUILayout.Toggle(SETT.aimbot, "Aimbot (L-alt)");
-                                    SETT.magicBullet = GUILayout.Toggle(SETT.magicBullet, "Magic Bullet(L-alt");
+                                    _boolDict[nameof(SettingsBools.AIMBOT)] = GUILayout.Toggle(_boolDict[nameof(SettingsBools.AIMBOT)], "Aimbot (L-alt)");
 
                                 });
                                 CGUILayout.BeginVertical(customBoxStyleGreen, () => 
