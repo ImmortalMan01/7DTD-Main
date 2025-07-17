@@ -111,19 +111,27 @@ namespace SevenDTDMono.Features
                 Vector3 direction = targetPos - referencePos;
                 Quaternion look = Quaternion.LookRotation(direction);
 
-                // Smoothly rotate the player towards the target. Directly
-                // setting the rotation each frame caused visible jitter while
-                // moving. Using Slerp keeps the motion fluid.
-                Player.transform.rotation = Quaternion.Slerp(
-                    Player.transform.rotation,
-                    look,
-                    rotationSpeed * Time.deltaTime);
-
-                // Keep the camera aligned with the player so the crosshair
-                // matches the adjusted view direction.
-                if (Camera.main)
+                if (SettingsInstance.SelectedAimbotMode == AimbotMode.Normal)
                 {
-                    Camera.main.transform.rotation = Player.transform.rotation;
+                    // Smoothly rotate the player towards the target. Directly
+                    // setting the rotation each frame caused visible jitter while
+                    // moving. Using Slerp keeps the motion fluid.
+                    Player.transform.rotation = Quaternion.Slerp(
+                        Player.transform.rotation,
+                        look,
+                        rotationSpeed * Time.deltaTime);
+
+                    // Keep the camera aligned with the player so the crosshair
+                    // matches the adjusted view direction.
+                    if (Camera.main)
+                    {
+                        Camera.main.transform.rotation = Player.transform.rotation;
+                    }
+                }
+                else if (SettingsInstance.SelectedAimbotMode == AimbotMode.Silent && Input.GetMouseButtonDown(0))
+                {
+                    // Directly damage the target when firing without adjusting the view
+                    bestZombie.DamageEntity(new DamageSource(EnumDamageSource.Internal, EnumDamageTypes.Suicide), 99999, false, 1f);
                 }
 
                 // Store positions for debug drawing
