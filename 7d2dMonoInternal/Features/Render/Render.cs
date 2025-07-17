@@ -72,11 +72,18 @@ namespace SevenDTDMono.Features.Render
             }
             if (SettingsInstance.GetBoolValue(nameof(SettingsBools.FOV_CIRCLE)))
             {
-                // Outline
-                RenderUtils.DrawCircle(Color.black, new Vector2(Screen.width / 2, Screen.height / 2), 149f);
-                RenderUtils.DrawCircle(Color.black, new Vector2(Screen.width / 2, Screen.height / 2), 151f);
+                float radius = 150f;
+                if (Camera.main)
+                {
+                    float angleRatio = Mathf.Tan(SettingsInstance.AimbotFov * Mathf.Deg2Rad * 0.5f) /
+                                       Mathf.Tan(Camera.main.fieldOfView * Mathf.Deg2Rad * 0.5f);
+                    radius = (Screen.height / 2f) * angleRatio;
+                }
 
-                RenderUtils.DrawCircle(new Color32(30, 144, 255, 255), new Vector2(Screen.width / 2, Screen.height / 2), 150f);
+                // Outline
+                RenderUtils.DrawCircle(Color.black, new Vector2(Screen.width / 2, Screen.height / 2), radius - 1f);
+                RenderUtils.DrawCircle(Color.black, new Vector2(Screen.width / 2, Screen.height / 2), radius + 1f);
+                RenderUtils.DrawCircle(new Color32(30, 144, 255, 255), new Vector2(Screen.width / 2, Screen.height / 2), radius);
             }
 
 

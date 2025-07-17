@@ -14,11 +14,11 @@ F7 default for UnityExplorer. rekomended to set to other button since 7dtd use f
 # Features
 1. Magic Bullet (players & zombies)
 2. Health ESP, Corner Box ESP, Name ESP, Box ESP, Chams (players & zombies)
-3. FOV Aimbot (players & zombies)
+3. FOV Aimbot with adjustable angle (players & zombies)
 4. No weapon sway, high viewmodel FOV
 5. Infinite ammo
 6. Toggle creative mode and debug mode +
-7. Crosshair, FOV circle
+7. Crosshair, toggleable FOV circle
 8. Speedhack
 9. Teleport to players / zombies Also Kill Players /Zombies
 10. Level up
