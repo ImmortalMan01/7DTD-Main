@@ -9,6 +9,10 @@ namespace SevenDTDMono.Features
         private static Dictionary<string, bool> BoolDict => SettingsInstance.GetChildDictionary<bool>(nameof(Dictionaries.BOOL_DICTIONARY));
         private static EntityPlayerLocal Player => NewSettings.EntityLocalPlayer;
 
+        // Controls how quickly the player rotates towards the target.
+        // Higher values result in snappier aim while lower values appear smoother.
+        private readonly float rotationSpeed = 10f;
+
         private void Update()
         {
             if (!SettingsInstance.GetBoolValue(nameof(SettingsBools.AIMBOT)))
@@ -48,15 +52,19 @@ namespace SevenDTDMono.Features
                 Vector3 direction = head - playerHead;
                 Quaternion look = Quaternion.LookRotation(direction);
 
-                // Instantly rotate the player towards the target to ensure that
-                // fired projectiles follow the corrected view direction.
-                Player.transform.rotation = look;
+                // Smoothly rotate the player towards the target. Directly
+                // setting the rotation each frame caused visible jitter while
+                // moving. Using Slerp keeps the motion fluid.
+                Player.transform.rotation = Quaternion.Slerp(
+                    Player.transform.rotation,
+                    look,
+                    rotationSpeed * Time.deltaTime);
 
-                // Align the main camera as well if it exists so the crosshair
-                // matches the updated orientation.
+                // Keep the camera aligned with the player so the crosshair
+                // matches the adjusted view direction.
                 if (Camera.main)
                 {
-                    Camera.main.transform.rotation = look;
+                    Camera.main.transform.rotation = Player.transform.rotation;
                 }
             }
         }
