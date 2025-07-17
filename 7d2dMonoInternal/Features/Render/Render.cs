@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
 using System.Collections.Generic;
+using System.Linq;
 using SevenDTDMono.Features;
 
 namespace SevenDTDMono.Features.Render
@@ -22,6 +23,16 @@ namespace SevenDTDMono.Features.Render
         //private static Dictionary<string, object> Settings => NewSettings.Instance.SettingsDictionary; //get instance of SettingsDictionary
         private static NewSettings SettingsInstance => NewSettings.Instance;
 
+        private class HitMarker
+        {
+            public EntityAlive Entity;
+            public Vector3 LocalPos;
+            public Vector3 StartPos;
+            public float Expire;
+        }
+
+        private readonly List<HitMarker> _hitMarkers = new List<HitMarker>();
+
 
 
         #endregion
@@ -38,6 +49,38 @@ namespace SevenDTDMono.Features.Render
             _colorBlack = new Color(0f, 0f, 0f, 120f);
             _entityBoxColor = new Color(0.42f, 0.36f, 0.90f, 1f);
             _crossColor = new Color32(30, 144, 255, 255);
+        }
+
+        private void Update()
+        {
+            if (!SettingsInstance.GetBoolValue(nameof(SettingsBools.BULLET_PATH)))
+            {
+                return;
+            }
+
+            if (!Camera.main)
+            {
+                return;
+            }
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
+                if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
+                {
+                    EntityAlive entity = hit.collider.GetComponentInParent<EntityAlive>();
+                    if (entity != null)
+                    {
+                        _hitMarkers.Add(new HitMarker
+                        {
+                            Entity = entity,
+                            LocalPos = entity.transform.InverseTransformPoint(hit.point),
+                            StartPos = ray.origin,
+                            Expire = Time.time + 10f
+                        });
+                    }
+                }
+            }
         }
 
         private void OnGUI()
@@ -96,6 +139,29 @@ namespace SevenDTDMono.Features.Render
                     Vector2 start = new Vector2(startScreen.x, Screen.height - startScreen.y);
                     Vector2 end = new Vector2(endScreen.x, Screen.height - endScreen.y);
                     RenderUtils.DrawLine(start, end, Color.red, 2f);
+                }
+            }
+
+            if (SettingsInstance.GetBoolValue(nameof(SettingsBools.BULLET_PATH)) && Camera.main)
+            {
+                foreach (HitMarker marker in _hitMarkers.ToList())
+                {
+                    if (Time.time > marker.Expire)
+                    {
+                        _hitMarkers.Remove(marker);
+                        continue;
+                    }
+
+                    Vector3 endWorld = marker.Entity.transform.TransformPoint(marker.LocalPos);
+                    Vector3 startScreen = Camera.main.WorldToScreenPoint(marker.StartPos);
+                    Vector3 endScreen = Camera.main.WorldToScreenPoint(endWorld);
+                    if (RenderUtils.IsOnScreen(startScreen) && RenderUtils.IsOnScreen(endScreen))
+                    {
+                        Vector2 start = new Vector2(startScreen.x, Screen.height - startScreen.y);
+                        Vector2 end = new Vector2(endScreen.x, Screen.height - endScreen.y);
+                        RenderUtils.DrawLine(start, end, Color.red, 2f);
+                        RenderUtils.DrawCircle(Color.red, end, 4f);
+                    }
                 }
             }
 
