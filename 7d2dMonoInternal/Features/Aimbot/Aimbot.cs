@@ -176,25 +176,43 @@ namespace SevenDTDMono.Features
         {
             float height = GetEntityHeight(entity);
             Vector3 basePos = PredictEntityBasePosition(entity);
+            Vector3 target;
 
             switch (SettingsInstance.SelectedAimbotTarget)
             {
                 case AimbotTarget.Chest:
-                    return basePos + Vector3.up * height * 0.5f;
+                    target = basePos + Vector3.up * height * 0.5f;
+                    break;
                 case AimbotTarget.Feet:
-                    return basePos + Vector3.up * height * 0.1f;
+                    target = basePos + Vector3.up * height * 0.1f;
+                    break;
                 default:
                     Transform head = entity.emodel?.GetHeadTransform();
                     if (head != null)
                     {
                         Vector3 offset = head.position - entity.transform.position;
-                        return basePos + offset;
+                        target = basePos + offset;
                     }
                     else
                     {
-                        return basePos + Vector3.up * height * 0.9f;
+                        target = basePos + Vector3.up * height * 0.9f;
                     }
+                    break;
             }
+
+            // Compensate for bullet drop by aiming slightly above the target
+            if (Camera.main)
+            {
+                Vector3 from = Camera.main.transform.position;
+                float distance = Vector3.Distance(from, target);
+                // Simple ballistic drop approximation
+                float gravity = 9.81f;
+                float travelTime = distance / projectileSpeed;
+                float drop = 0.5f * gravity * travelTime * travelTime;
+                target += Vector3.up * drop;
+            }
+
+            return target;
         }
 
         /// <summary>

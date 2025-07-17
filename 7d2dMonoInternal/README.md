@@ -22,13 +22,14 @@ F7 default for UnityExplorer. rekomended to set to other button since 7dtd use f
 8. Crosshair, toggleable FOV circle
 9. Show Fov overlay to visualize aimbot FOV
 10. Bullet path debug line for aimbot
-11. Speedhack
-12. Teleport to players / zombies Also Kill Players /Zombies
-12. Level up
-13. Add 10 skill points
-14. Health and stamina  // you can still take damage! this only makes regen as same phase as loss
-15. food and water //this only makes regen as same phase as loss
-16.BUFFS
+11. Bullet drop compensation for aimbot
+12. Speedhack
+13. Teleport to players / zombies Also Kill Players /Zombies
+14. Level up
+15. Add 10 skill points
+16. Health and stamina  // you can still take damage! this only makes regen as same phase as loss
+17. food and water //this only makes regen as same phase as loss
+18. BUFFS
     14.1  Buffs trigger //just press button in buffs scroll view to apply buff to yourself
     14.2 Remove all buffs
     14.3 Add good Buffs
@@ -36,8 +37,8 @@ F7 default for UnityExplorer. rekomended to set to other button since 7dtd use f
     14.5 Clear cheatbuff incase we mess upp
     14.6 add effect group should not need to be used, but incase you dont get effects by addding passive effect use this button
     14.7 some more buttosn setting passives
-17. Ignored på AI
-18. SceneDebugger (F3)
+19. Ignored på AI
+20. SceneDebugger (F3)
 
 I added some log output, Primary for debugging but could be usefull in other cases
 ![log_](https://github.com/mcpolo99/7d2dMonoInternal/assets/32239939/90c01af9-dbf6-44df-9a82-e5df20f1be37)
