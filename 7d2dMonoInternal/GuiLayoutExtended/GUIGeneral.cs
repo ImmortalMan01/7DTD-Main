@@ -17,9 +17,10 @@ namespace SevenDTDMono.GuiLayoutExtended
 
 
 
-        private static readonly Color Active = Color.green;
-        private static readonly Color Inactive = Color.yellow;
-        private static readonly Color Hover = Color.cyan;
+        // Modern color palette for UI elements
+        private static readonly Color Active = new Color(0.2f, 0.8f, 1f);
+        private static readonly Color Inactive = new Color(0.85f, 0.85f, 0.85f);
+        private static readonly Color Hover = new Color(0.3f, 1f, 1f);
         
 
 

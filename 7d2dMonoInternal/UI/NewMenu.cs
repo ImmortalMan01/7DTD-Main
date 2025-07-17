@@ -130,34 +130,26 @@ namespace SevenDTDMono
 
 
 
-            GUIStyle customStyle = new GUIStyle(GUI.skin.window);
+            GUIStyle customStyle = new GUIStyle(GUI.skin.window)
+            {
+                fontSize = 16,
+                fontStyle = FontStyle.Bold
+            };
+
+            // Apply gradient background for a more modern look
+            customStyle.normal.background = MakeGradientTexture(2, 2,
+                new Color(0.15f, 0.15f, 0.15f, 0.95f),
+                new Color(0.05f, 0.05f, 0.05f, 0.95f));
+
             if (NewSettings.GameManager.gameStateManager.bGameStarted)
             {
-
-                customStyle.normal.textColor = Color.green;
-                customStyle.onNormal.textColor = Color.green;
-                //customStyle.onFocused.textColor = Color.green;
-                //customStyle.onActive.textColor = Color.green;
-                //customStyle.focused.textColor = Color.green;
-                //customStyle.onActive.textColor = Color.blue;
-                //customStyle.onHover.textColor = Color.yellow;
-                //customStyle.hover.textColor = Color.black;
-                //customStyle.active.textColor = Color.cyan;
-
-
+                customStyle.normal.textColor = Color.white;
+                customStyle.onNormal.textColor = Color.white;
             }
             else
             {
                 customStyle.normal.textColor = Color.red;
                 customStyle.onNormal.textColor = Color.red;
-                //customStyle.onFocused.textColor = Color.red;
-                //customStyle.focused.textColor = Color.red;
-                //customStyle.onActive.textColor = Color.red;
-                //customStyle.onHover.textColor = Color.red;  
-                //customStyle.hover.textColor = Color.red;  
-                //customStyle.active.textColor = Color.red;
-
-
             }
 
             if (drawMenu)
@@ -177,16 +169,15 @@ namespace SevenDTDMono
 
             #region Styles BE OnGUI
 
-            defBoxStyle = new GUIStyle(GUI.skin.box);
-            //defBoxStyle.border = new RectOffset(-2,-2,-2,-2);
-            defBoxStyle.padding = new RectOffset(0, 0, 0, 0);
-
+            defBoxStyle = new GUIStyle(GUI.skin.box)
+            {
+                padding = new RectOffset(0, 0, 0, 0)
+            };
 
             customBoxStyleGreen = new GUIStyle(GUI.skin.box);
-            customBoxStyleGreen.normal.background = MakeTexture(2, 2, new Color(0f, 1f, 0f, 0.5f));
-
-
-            //customBoxStyleGreen.border = new RectOffset(2, 2, 2, 2);
+            customBoxStyleGreen.normal.background = MakeGradientTexture(2, 2,
+                new Color(0.25f, 0.25f, 0.25f, 0.8f),
+                new Color(0.15f, 0.15f, 0.15f, 0.8f));
 
 
             centeredLabelStyle = new GUIStyle(GUI.skin.label);
@@ -204,6 +195,21 @@ namespace SevenDTDMono
 
             Texture2D texture = new Texture2D(width, height);
             texture.SetPixels(pixels);
+            texture.Apply();
+            return texture;
+        }
+
+        private Texture2D MakeGradientTexture(int width, int height, Color startColor, Color endColor)
+        {
+            Texture2D texture = new Texture2D(width, height);
+            for (int y = 0; y < height; y++)
+            {
+                Color rowColor = Color.Lerp(startColor, endColor, (float)y / (height - 1));
+                for (int x = 0; x < width; x++)
+                {
+                    texture.SetPixel(x, y, rowColor);
+                }
+            }
             texture.Apply();
             return texture;
         }
