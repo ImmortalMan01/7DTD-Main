@@ -147,6 +147,13 @@ namespace SevenDTDMono.Features
         private Vector3 PredictEntityBasePosition(EntityAlive entity)
         {
             Vector3 current = entity.transform.position;
+
+            // Early out if movement prediction is disabled
+            if (!SettingsInstance.GetBoolValue(nameof(SettingsBools.MOVEMENT_PREDICTION)))
+            {
+                return current;
+            }
+
             if (previousPositions.TryGetValue(entity.entityId, out Vector3 last))
             {
                 float dt = Time.deltaTime;
