@@ -1,0 +1,1 @@
+New repository for remaking the 7DTD (7 days to die) legit mod. It is made for educational purposes only and cannot be used in multiplayer. Everything added to this mod (cheat) is completely legal and allowed.
