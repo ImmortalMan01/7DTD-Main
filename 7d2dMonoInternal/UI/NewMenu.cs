@@ -830,7 +830,7 @@ namespace SevenDTDMono
 
 
                                     GUILayout.Label("EXPERIMENTAL ", centeredLabelStyle);
-                                    //SETT.aimbot = GUILayout.Toggle(SETT.aimbot, "Aimbot (L-alt)");
+                                    NewSettings.ZombieAimbot = GUILayout.Toggle(NewSettings.ZombieAimbot, "Zombie Aimbot (L-alt)");
                                     //SETT.magicBullet = GUILayout.Toggle(SETT.magicBullet, "Magic Bullet(L-alt");
 
                                 });
@@ -1002,7 +1002,7 @@ namespace SevenDTDMono
 
 
                                     GUILayout.Label("EXPERIMENTAL ", centeredLabelStyle);
-                                    SETT.aimbot = GUILayout.Toggle(SETT.aimbot, "Aimbot (L-alt)");
+                                    NewSettings.ZombieAimbot = GUILayout.Toggle(NewSettings.ZombieAimbot, "Zombie Aimbot (L-alt)");
                                     SETT.magicBullet = GUILayout.Toggle(SETT.magicBullet, "Magic Bullet(L-alt");
 
                                 });

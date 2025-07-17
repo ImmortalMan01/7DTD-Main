@@ -33,6 +33,11 @@ namespace SevenDTDMono
         public bool AssemblyPreLoaded { get; set; }
         public bool GameStarted { get; set; }
 
+        /// <summary>
+        /// Toggle for enabling zombie aimbot
+        /// </summary>
+        public static bool ZombieAimbot { get; set; }
+
 
 
 
