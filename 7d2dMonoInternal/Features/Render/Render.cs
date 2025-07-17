@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
 using System.Collections.Generic;
+using SevenDTDMono.Features;
 
 namespace SevenDTDMono.Features.Render
 {
@@ -84,6 +85,18 @@ namespace SevenDTDMono.Features.Render
                 RenderUtils.DrawCircle(Color.black, new Vector2(Screen.width / 2, Screen.height / 2), radius - 1f);
                 RenderUtils.DrawCircle(Color.black, new Vector2(Screen.width / 2, Screen.height / 2), radius + 1f);
                 RenderUtils.DrawCircle(new Color32(30, 144, 255, 255), new Vector2(Screen.width / 2, Screen.height / 2), radius);
+            }
+
+            if (SettingsInstance.GetBoolValue(nameof(SettingsBools.BULLET_PATH)) && Aimbot.HasTarget && Camera.main)
+            {
+                Vector3 startScreen = Camera.main.WorldToScreenPoint(Aimbot.StartPos);
+                Vector3 endScreen = Camera.main.WorldToScreenPoint(Aimbot.TargetPos);
+                if (RenderUtils.IsOnScreen(startScreen) && RenderUtils.IsOnScreen(endScreen))
+                {
+                    Vector2 start = new Vector2(startScreen.x, Screen.height - startScreen.y);
+                    Vector2 end = new Vector2(endScreen.x, Screen.height - endScreen.y);
+                    RenderUtils.DrawLine(start, end, Color.red, 2f);
+                }
             }
 
 
