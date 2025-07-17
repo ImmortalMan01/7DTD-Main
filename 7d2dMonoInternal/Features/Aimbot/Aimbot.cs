@@ -39,6 +39,9 @@ namespace SevenDTDMono.Features
         // Higher values result in snappier aim while lower values appear smoother.
         private readonly float rotationSpeed = 10f;
 
+        // Currently locked target while the activation key is held
+        private EntityAlive lockedZombie = null;
+
         private void Update()
         {
             // Refresh projectile speed from the currently held weapon so that
@@ -49,14 +52,18 @@ namespace SevenDTDMono.Features
                 return;
             }
 
+            bool pressed = Input.GetKeyDown(activationKey);
+            bool holding = Input.GetKey(activationKey);
             // Only activate aimbot while the activation key is held
-            if (!Input.GetKey(activationKey))
+            if (!holding)
             {
+                lockedZombie = null;
                 return;
             }
 
             if (Player == null || !NewSettings.GameManager.gameStateManager.bGameStarted)
             {
+                lockedZombie = null;
                 return;
             }
 
@@ -76,32 +83,45 @@ namespace SevenDTDMono.Features
                 referenceForward = Camera.main.transform.forward;
             }
 
-            foreach (EntityAlive zombie in NewSettings.EntityAlive)
+            if (lockedZombie != null && lockedZombie.IsAlive())
             {
-                if (zombie == null || !zombie.IsAlive())
+                bestZombie = lockedZombie;
+            }
+            else
+            {
+                lockedZombie = null;
+                foreach (EntityAlive zombie in NewSettings.EntityAlive)
                 {
-                    continue;
+                    if (zombie == null || !zombie.IsAlive())
+                    {
+                        continue;
+                    }
+
+                    // Use the current, unadjusted position when checking the FOV so
+                    // the on-screen circle matches the selection logic.  Including
+                    // prediction and bullet drop caused the aimbot to ignore valid
+                    // targets near the crosshair.
+                    Vector3 target = GetTargetPositionSimple(zombie);
+                    if (!IsWithinFov(target))
+                    {
+                        continue;
+                    }
+                    if (!HasLineOfSight(referencePos, target, zombie))
+                    {
+                        continue;
+                    }
+                    Vector3 direction = target - referencePos;
+                    float angle = Vector3.Angle(referenceForward, direction);
+                    if (angle < minAngle)
+                    {
+                        minAngle = angle;
+                        bestZombie = zombie;
+                    }
                 }
 
-                // Use the current, unadjusted position when checking the FOV so
-                // the on-screen circle matches the selection logic.  Including
-                // prediction and bullet drop caused the aimbot to ignore valid
-                // targets near the crosshair.
-                Vector3 target = GetTargetPositionSimple(zombie);
-                if (!IsWithinFov(target))
+                if (pressed)
                 {
-                    continue;
-                }
-                if (!HasLineOfSight(referencePos, target, zombie))
-                {
-                    continue;
-                }
-                Vector3 direction = target - referencePos;
-                float angle = Vector3.Angle(referenceForward, direction);
-                if (angle < minAngle)
-                {
-                    minAngle = angle;
-                    bestZombie = zombie;
+                    lockedZombie = bestZombie;
                 }
             }
 
@@ -113,19 +133,11 @@ namespace SevenDTDMono.Features
 
                 if (SettingsInstance.SelectedAimbotMode == AimbotMode.Normal)
                 {
-                    // Smoothly rotate the player towards the target. Directly
-                    // setting the rotation each frame caused visible jitter while
-                    // moving. Using Slerp keeps the motion fluid.
-                    Player.transform.rotation = Quaternion.Slerp(
-                        Player.transform.rotation,
-                        look,
-                        rotationSpeed * Time.deltaTime);
-
-                    // Keep the camera aligned with the player so the crosshair
-                    // matches the adjusted view direction.
+                    // Instantly rotate the player and camera to face the target
+                    Player.transform.rotation = look;
                     if (Camera.main)
                     {
-                        Camera.main.transform.rotation = Player.transform.rotation;
+                        Camera.main.transform.rotation = look;
                     }
                 }
                 else if (SettingsInstance.SelectedAimbotMode == AimbotMode.Silent && Input.GetMouseButtonDown(0))
