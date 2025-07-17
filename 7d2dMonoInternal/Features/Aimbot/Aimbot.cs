@@ -184,7 +184,16 @@ namespace SevenDTDMono.Features
                 case AimbotTarget.Feet:
                     return basePos + Vector3.up * height * 0.1f;
                 default:
-                    return basePos + Vector3.up * height * 0.9f;
+                    Transform head = entity.emodel?.GetHeadTransform();
+                    if (head != null)
+                    {
+                        Vector3 offset = head.position - entity.transform.position;
+                        return basePos + offset;
+                    }
+                    else
+                    {
+                        return basePos + Vector3.up * height * 0.9f;
+                    }
             }
         }
 
