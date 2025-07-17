@@ -52,7 +52,6 @@ namespace SevenDTDMono.Features
                 return;
             }
 
-            bool pressed = Input.GetKeyDown(activationKey);
             bool holding = Input.GetKey(activationKey);
             // Only activate aimbot while the activation key is held
             if (!holding)
@@ -91,49 +90,44 @@ namespace SevenDTDMono.Features
                     HasLineOfSight(referencePos, lockedTarget, lockedZombie))
                 {
                     bestZombie = lockedZombie;
+                    minAngle = Vector3.Angle(referenceForward, lockedTarget - referencePos);
                 }
                 else
                 {
                     lockedZombie = null;
                 }
             }
-            else
-            {
-                lockedZombie = null;
-                foreach (EntityAlive zombie in NewSettings.EntityAlive)
-                {
-                    if (zombie == null || !zombie.IsAlive())
-                    {
-                        continue;
-                    }
 
-                    // Use the current, unadjusted position when checking the FOV so
-                    // the on-screen circle matches the selection logic.  Including
-                    // prediction and bullet drop caused the aimbot to ignore valid
-                    // targets near the crosshair.
-                    Vector3 target = GetTargetPositionSimple(zombie);
-                    if (!IsWithinFov(target))
-                    {
-                        continue;
-                    }
-                    if (!HasLineOfSight(referencePos, target, zombie))
-                    {
-                        continue;
-                    }
-                    Vector3 direction = target - referencePos;
-                    float angle = Vector3.Angle(referenceForward, direction);
-                    if (angle < minAngle)
-                    {
-                        minAngle = angle;
-                        bestZombie = zombie;
-                    }
+            foreach (EntityAlive zombie in NewSettings.EntityAlive)
+            {
+                if (zombie == null || !zombie.IsAlive())
+                {
+                    continue;
                 }
 
-                if (pressed)
+                // Use the current, unadjusted position when checking the FOV so
+                // the on-screen circle matches the selection logic.  Including
+                // prediction and bullet drop caused the aimbot to ignore valid
+                // targets near the crosshair.
+                Vector3 target = GetTargetPositionSimple(zombie);
+                if (!IsWithinFov(target))
                 {
-                    lockedZombie = bestZombie;
+                    continue;
+                }
+                if (!HasLineOfSight(referencePos, target, zombie))
+                {
+                    continue;
+                }
+                Vector3 direction = target - referencePos;
+                float angle = Vector3.Angle(referenceForward, direction);
+                if (angle < minAngle)
+                {
+                    minAngle = angle;
+                    bestZombie = zombie;
                 }
             }
+
+            lockedZombie = bestZombie;
 
             if (bestZombie != null)
             {
