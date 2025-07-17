@@ -9,6 +9,9 @@ namespace SevenDTDMono.Features
         private static Dictionary<string, bool> BoolDict => SettingsInstance.GetChildDictionary<bool>(nameof(Dictionaries.BOOL_DICTIONARY));
         private static EntityPlayerLocal Player => NewSettings.EntityLocalPlayer;
 
+        // Hold this key for the aimbot to activate
+        private readonly KeyCode activationKey = KeyCode.LeftAlt;
+
         // Controls how quickly the player rotates towards the target.
         // Higher values result in snappier aim while lower values appear smoother.
         private readonly float rotationSpeed = 10f;
@@ -16,6 +19,12 @@ namespace SevenDTDMono.Features
         private void Update()
         {
             if (!SettingsInstance.GetBoolValue(nameof(SettingsBools.AIMBOT)))
+            {
+                return;
+            }
+
+            // Only activate aimbot while the activation key is held
+            if (!Input.GetKey(activationKey))
             {
                 return;
             }
