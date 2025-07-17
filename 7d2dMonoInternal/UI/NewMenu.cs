@@ -43,7 +43,7 @@ namespace SevenDTDMono
         #region render/GUI stuff
         //private bool drawMenu = true;
         public int _group = 0;
-        string[] CheatsString = { "Player", "Toggles and Modifiers", "Buffs and Stuff", "Some crap" };
+        string[] CheatsString = { "Player", "AIM", "Toggles and Modifiers", "Buffs and Stuff", "Some crap" };
         private int windowID;
         private Rect windowRect;
 
@@ -238,18 +238,19 @@ namespace SevenDTDMono
                 _group = NewGUILayout.Toolbar4(_group, CheatsString, GUI.skin.box); //creating the group for switch comand    
                 switch (_group)
                 {
-                    case 0://switch to menu0
+                    case 0://Player
                         Tab1();
                         break;
-                    case 1://switch to menu1
+                    case 1://AIM
+                        TabAim();
+                        break;
+                    case 2://Toggles and Modifiers
                         Tab2();
                         break;
-                    case 2://switch to menu2
+                    case 3://Buffs and Stuff
                         Tab3();
                         break;
-
-                    case 3: //add more for more menu
-                            //Log.Out("opening Menu3");
+                    case 4://Some crap
                         Tab4();
                         break;
                 }
@@ -453,6 +454,38 @@ namespace SevenDTDMono
                     });
                 });
             });
+            GUI.DragWindow();
+
+        }
+
+        private void TabAim() //aimbot settings
+        {
+            NewGUILayout.BeginVertical(GUI.skin.box, () =>
+            {
+                NewGUILayout.ButtonToggleDictionary("Aimbot", nameof(SettingsBools.AIMBOT));
+
+                if (_boolDict[nameof(SettingsBools.AIMBOT)])
+                {
+                    NewGUILayout.DropDownForMethods("Aimbot Settings", () =>
+                    {
+                        NewGUILayout.ButtonToggleDictionary("Magic Bullet", nameof(SettingsBools.MAGIC_BULLET));
+                        string[] targets = System.Enum.GetNames(typeof(AimbotTarget));
+                        int selected = (int)SettingsInstance.SelectedAimbotTarget;
+                        int newSelected = GUILayout.Toolbar(selected, targets);
+                        if (newSelected != selected)
+                        {
+                            SettingsInstance.SelectedAimbotTarget = (AimbotTarget)newSelected;
+                        }
+
+                        GUILayout.BeginHorizontal();
+                        GUILayout.Label($"FOV {SettingsInstance.AimbotFov:F0}", GUILayout.MaxWidth(80));
+                        SettingsInstance.AimbotFov = GUILayout.HorizontalSlider(SettingsInstance.AimbotFov, 10f, 120f, GUILayout.Width(150));
+                        GUILayout.EndHorizontal();
+
+                    }, ref aimbotSettingsDropdown);
+                }
+            });
+
             GUI.DragWindow();
 
         }
@@ -671,28 +704,7 @@ namespace SevenDTDMono
                         Extras.LogAvailableBuffNames(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "load", "BuffsList.txt"));
                     }
 
-                    NewGUILayout.ButtonToggleDictionary("Aimbot", nameof(SettingsBools.AIMBOT));
 
-                    if (_boolDict[nameof(SettingsBools.AIMBOT)])
-                    {
-                        NewGUILayout.DropDownForMethods("Aimbot Settings", () =>
-                        {
-                            NewGUILayout.ButtonToggleDictionary("Magic Bullet", nameof(SettingsBools.MAGIC_BULLET));
-                            string[] targets = System.Enum.GetNames(typeof(AimbotTarget));
-                            int selected = (int)SettingsInstance.SelectedAimbotTarget;
-                            int newSelected = GUILayout.Toolbar(selected, targets);
-                            if (newSelected != selected)
-                            {
-                                SettingsInstance.SelectedAimbotTarget = (AimbotTarget)newSelected;
-                            }
-
-                            GUILayout.BeginHorizontal();
-                            GUILayout.Label($"FOV {SettingsInstance.AimbotFov:F0}", GUILayout.MaxWidth(80));
-                            SettingsInstance.AimbotFov = GUILayout.HorizontalSlider(SettingsInstance.AimbotFov, 10f, 120f, GUILayout.Width(150));
-                            GUILayout.EndHorizontal();
-
-                        }, ref aimbotSettingsDropdown);
-                    }
 
                 });
 
