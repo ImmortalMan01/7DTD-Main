@@ -78,6 +78,10 @@ namespace SevenDTDMono.Features
                 {
                     continue;
                 }
+                if (!HasLineOfSight(referencePos, target, zombie))
+                {
+                    continue;
+                }
                 Vector3 direction = target - referencePos;
                 float angle = Vector3.Angle(referenceForward, direction);
                 if (angle < minAngle)
@@ -245,6 +249,30 @@ namespace SevenDTDMono.Features
             }
 
             return target;
+        }
+
+        // Returns true if there is a clear line of sight from the origin to the
+        // target position. Uses a raycast to detect any blocking colliders and
+        // verifies that the first hit belongs to the intended entity.
+        private static bool HasLineOfSight(Vector3 origin, Vector3 target, EntityAlive entity)
+        {
+            Vector3 direction = target - origin;
+            float distance = direction.magnitude;
+            if (distance <= 0f)
+            {
+                return true;
+            }
+
+            if (Physics.Raycast(origin, direction.normalized, out RaycastHit hit, distance))
+            {
+                EntityAlive hitEntity = hit.collider.GetComponentInParent<EntityAlive>();
+                if (hitEntity != null && hitEntity != entity)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /// <summary>
