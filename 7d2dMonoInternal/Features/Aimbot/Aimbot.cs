@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using SevenDTDMono;
 
 namespace SevenDTDMono.Features
 {
@@ -57,8 +58,19 @@ namespace SevenDTDMono.Features
 
             if (bestZombie != null)
             {
-                Vector3 head = bestZombie.emodel.GetHeadTransform().position;
-                Vector3 direction = head - playerHead;
+                Vector3 targetPos = bestZombie.emodel.GetHeadTransform().position;
+
+                switch (SettingsInstance.SelectedAimbotTarget)
+                {
+                    case AimbotTarget.Chest:
+                        targetPos = bestZombie.transform.position + Vector3.up * 1.0f;
+                        break;
+                    case AimbotTarget.Leg:
+                        targetPos = bestZombie.transform.position + Vector3.up * 0.3f;
+                        break;
+                }
+
+                Vector3 direction = targetPos - playerHead;
                 Quaternion look = Quaternion.LookRotation(direction);
 
                 // Smoothly rotate the player towards the target. Directly
