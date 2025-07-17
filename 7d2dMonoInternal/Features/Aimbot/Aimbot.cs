@@ -69,7 +69,11 @@ namespace SevenDTDMono.Features
                     continue;
                 }
 
-                Vector3 target = GetTargetPosition(zombie);
+                // Use the current, unadjusted position when checking the FOV so
+                // the on-screen circle matches the selection logic.  Including
+                // prediction and bullet drop caused the aimbot to ignore valid
+                // targets near the crosshair.
+                Vector3 target = GetTargetPositionSimple(zombie);
                 if (!IsWithinFov(target))
                 {
                     continue;
@@ -210,6 +214,34 @@ namespace SevenDTDMono.Features
                 float travelTime = distance / projectileSpeed;
                 float drop = 0.5f * gravity * travelTime * travelTime;
                 target += Vector3.up * drop;
+            }
+
+            return target;
+        }
+
+        /// <summary>
+        /// Returns the entity position for FOV checks without bullet drop or
+        /// movement prediction. Using the raw position ensures the on-screen
+        /// FOV circle matches the selection logic.
+        /// </summary>
+        private static Vector3 GetTargetPositionSimple(EntityAlive entity)
+        {
+            float height = GetEntityHeight(entity);
+            Vector3 basePos = entity.transform.position;
+            Vector3 target;
+
+            switch (SettingsInstance.SelectedAimbotTarget)
+            {
+                case AimbotTarget.Chest:
+                    target = basePos + Vector3.up * height * 0.5f;
+                    break;
+                case AimbotTarget.Feet:
+                    target = basePos + Vector3.up * height * 0.1f;
+                    break;
+                default:
+                    Transform head = entity.emodel?.GetHeadTransform();
+                    target = head != null ? head.position : basePos + Vector3.up * height * 0.9f;
+                    break;
             }
 
             return target;
