@@ -4,6 +4,6 @@ namespace SevenDTDMono
     {
         Head,
         Chest,
-        Leg
+        Feet
     }
 }

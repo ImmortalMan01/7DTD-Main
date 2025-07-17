@@ -15,6 +15,12 @@ namespace SevenDTDMono.Features
         public static Vector3 StartPos { get; private set; }
         public static Vector3 TargetPos { get; private set; }
 
+        // Approximated projectile speed used for movement prediction
+        private readonly float projectileSpeed = 60f;
+
+        // Cache previous positions to estimate entity velocity
+        private readonly Dictionary<int, Vector3> previousPositions = new Dictionary<int, Vector3>();
+
         // Hold this key for the aimbot to activate
         private readonly KeyCode activationKey = KeyCode.LeftAlt;
 
@@ -103,6 +109,15 @@ namespace SevenDTDMono.Features
                 TargetPos = targetPos;
                 HasTarget = true;
             }
+
+            // Update cached positions for next frame
+            foreach (EntityAlive zombie in NewSettings.EntityAlive)
+            {
+                if (zombie != null)
+                {
+                    previousPositions[zombie.entityId] = zombie.transform.position;
+                }
+            }
         }
 
         /// <summary>
@@ -128,20 +143,38 @@ namespace SevenDTDMono.Features
             return height;
         }
 
+        // Estimate where the entity will be when a projectile reaches it
+        private Vector3 PredictEntityBasePosition(EntityAlive entity)
+        {
+            Vector3 current = entity.transform.position;
+            if (previousPositions.TryGetValue(entity.entityId, out Vector3 last))
+            {
+                float dt = Time.deltaTime;
+                if (dt > 0f)
+                {
+                    Vector3 velocity = (current - last) / dt;
+                    float distance = Vector3.Distance(Player.transform.position, current);
+                    float travelTime = distance / projectileSpeed;
+                    current += velocity * travelTime;
+                }
+            }
+            return current;
+        }
+
         /// <summary>
         /// Returns the world position the aimbot should target based on the
         /// selected body part.
         /// </summary>
-        private static Vector3 GetTargetPosition(EntityAlive entity)
+        private Vector3 GetTargetPosition(EntityAlive entity)
         {
             float height = GetEntityHeight(entity);
-            Vector3 basePos = entity.transform.position;
+            Vector3 basePos = PredictEntityBasePosition(entity);
 
             switch (SettingsInstance.SelectedAimbotTarget)
             {
                 case AimbotTarget.Chest:
                     return basePos + Vector3.up * height * 0.5f;
-                case AimbotTarget.Leg:
+                case AimbotTarget.Feet:
                     return basePos + Vector3.up * height * 0.1f;
                 default:
                     return basePos + Vector3.up * height * 0.9f;
