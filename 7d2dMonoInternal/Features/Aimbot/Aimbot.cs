@@ -65,13 +65,21 @@ namespace SevenDTDMono.Features
             {
                 Vector3 targetPos = bestZombie.emodel.GetHeadTransform().position;
 
+                // Calculate the approximate height of the entity to create
+                // proportional offsets for chest and leg aiming. Using fixed
+                // offsets caused the aim to always end up on the head for
+                // entities with different sizes.
+                float entityHeight = targetPos.y - bestZombie.transform.position.y;
+
                 switch (SettingsInstance.SelectedAimbotTarget)
                 {
                     case AimbotTarget.Chest:
-                        targetPos = bestZombie.transform.position + Vector3.up * 1.0f;
+                        // Roughly aim at the middle of the body
+                        targetPos -= Vector3.up * entityHeight * 0.4f;
                         break;
                     case AimbotTarget.Leg:
-                        targetPos = bestZombie.transform.position + Vector3.up * 0.3f;
+                        // Aim lower towards the legs
+                        targetPos -= Vector3.up * entityHeight * 0.75f;
                         break;
                 }
 
