@@ -38,6 +38,7 @@ namespace SevenDTDMono
             gameObject.AddComponent<Features.Render.Render>();
             gameObject.AddComponent<Features.Render.Visuals>();
             gameObject.AddComponent<Features.Aimbot>();
+            gameObject.AddComponent<Features.Magic.MagicBullet>();
 
             //gameObject.AddComponent<SceneDebugger>();
             //gameObject.AddComponent<CBuffs>();

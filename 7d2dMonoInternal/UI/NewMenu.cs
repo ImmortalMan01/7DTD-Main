@@ -675,8 +675,9 @@ namespace SevenDTDMono
 
                     if (_boolDict[nameof(SettingsBools.AIMBOT)])
                     {
-                        NewGUILayout.DropDownForMethods("Aimbot Target", () =>
+                        NewGUILayout.DropDownForMethods("Aimbot Settings", () =>
                         {
+                            NewGUILayout.ButtonToggleDictionary("Magic Bullet", nameof(SettingsBools.MAGIC_BULLET));
                             string[] targets = System.Enum.GetNames(typeof(AimbotTarget));
                             int selected = (int)SettingsInstance.SelectedAimbotTarget;
                             int newSelected = GUILayout.Toolbar(selected, targets);
