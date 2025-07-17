@@ -27,6 +27,7 @@ namespace SevenDTDMono
         BUFF_CLASSES_LOADED,
         PROGRESSION_VALUE_LOADED,
         NAME_SCRAMBLE,
-        AIMBOT
+        AIMBOT,
+        MAGIC_BULLET
     }
 }
