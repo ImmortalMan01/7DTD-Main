@@ -47,7 +47,17 @@ namespace SevenDTDMono.Features
                 Vector3 head = bestZombie.emodel.GetHeadTransform().position;
                 Vector3 direction = head - playerHead;
                 Quaternion look = Quaternion.LookRotation(direction);
-                Player.transform.rotation = Quaternion.Slerp(Player.transform.rotation, look, Time.deltaTime * 15f);
+
+                // Instantly rotate the player towards the target to ensure that
+                // fired projectiles follow the corrected view direction.
+                Player.transform.rotation = look;
+
+                // Align the main camera as well if it exists so the crosshair
+                // matches the updated orientation.
+                if (Camera.main)
+                {
+                    Camera.main.transform.rotation = look;
+                }
             }
         }
     }
