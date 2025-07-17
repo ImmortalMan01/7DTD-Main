@@ -35,6 +35,7 @@ namespace SevenDTDMono
         private string inputValuModType = string.Empty;
         private int currentIndex = 0;
         private int ValueModifierTypesIndex = 0;
+        private bool aimbotSettingsDropdown = false;
 
         #endregion
 
@@ -671,6 +672,20 @@ namespace SevenDTDMono
                     }
 
                     NewGUILayout.ButtonToggleDictionary("Aimbot", nameof(SettingsBools.AIMBOT));
+
+                    if (_boolDict[nameof(SettingsBools.AIMBOT)])
+                    {
+                        NewGUILayout.DropDownForMethods("Aimbot Target", () =>
+                        {
+                            string[] targets = System.Enum.GetNames(typeof(AimbotTarget));
+                            int selected = (int)SettingsInstance.SelectedAimbotTarget;
+                            int newSelected = GUILayout.Toolbar(selected, targets);
+                            if (newSelected != selected)
+                            {
+                                SettingsInstance.SelectedAimbotTarget = (AimbotTarget)newSelected;
+                            }
+                        }, ref aimbotSettingsDropdown);
+                    }
 
                 });
 

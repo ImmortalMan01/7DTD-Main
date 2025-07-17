@@ -46,6 +46,9 @@ namespace SevenDTDMono
         public static float FloatHarvestCountMultiplier = 0.5f;//Harvest count
         public static float FloatAttacksPerMinuteMultiplier = 0.5f;//Attacks Per Minute
 
+        // Selected target area for the aimbot feature
+        public AimbotTarget SelectedAimbotTarget = AimbotTarget.Head;
+
 
         #endregion //define
 
