@@ -294,29 +294,36 @@ namespace SevenDTDMono.Features
 
         /// <summary>
         /// Checks if the given world position is inside the configured aimbot FOV.
-        /// Uses screen space distance so the FOV circle and targeting logic match.
+        /// Uses a pure angle check so off-screen calculations match the drawn circle.
         /// </summary>
         private static bool IsWithinFov(Vector3 worldPos)
         {
-            if (!Camera.main)
+            Vector3 origin;
+            Vector3 forward;
+
+            if (Camera.main)
+            {
+                origin = Camera.main.transform.position;
+                forward = Camera.main.transform.forward;
+            }
+            else if (Player != null)
+            {
+                origin = Player.emodel.GetHeadTransform().position;
+                forward = Player.transform.forward;
+            }
+            else
             {
                 return true;
             }
 
-            Vector3 screen = Camera.main.WorldToScreenPoint(worldPos);
-            if (screen.z <= 0f)
+            Vector3 direction = worldPos - origin;
+            if (direction.sqrMagnitude <= 0f)
             {
-                return false;
+                return true;
             }
 
-            Vector2 center = new Vector2(Screen.width / 2f, Screen.height / 2f);
-            Vector2 pos2D = new Vector2(screen.x, screen.y);
-
-            float angleRatio = Mathf.Tan(SettingsInstance.AimbotFov * Mathf.Deg2Rad * 0.5f) /
-                               Mathf.Tan(Camera.main.fieldOfView * Mathf.Deg2Rad * 0.5f);
-            float maxDist = (Screen.height / 2f) * angleRatio;
-
-            return Vector2.Distance(pos2D, center) <= maxDist;
+            float angle = Vector3.Angle(forward, direction);
+            return angle <= SettingsInstance.AimbotFov * 0.5f;
         }
 
         // Attempts to read the projectile velocity from the currently held gun.
