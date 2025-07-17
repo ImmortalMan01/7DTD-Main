@@ -68,7 +68,9 @@ namespace SevenDTDMono.Features.Magic
 
             if (bestTarget != null)
             {
-                bestTarget.DamageEntity(new DamageSource(EnumDamageSource.Internal, EnumDamageTypes.Bullet), 99999, false, 1f);
+                // Use a generic damage type to ensure compatibility even if
+                // EnumDamageTypes.Bullet is unavailable in some game versions.
+                bestTarget.DamageEntity(new DamageSource(EnumDamageSource.Internal, EnumDamageTypes.Suicide), 99999, false, 1f);
             }
         }
     }
