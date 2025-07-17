@@ -15,7 +15,7 @@ namespace SevenDTDMono.Features
         private void Update()
         {
             timer += Time.deltaTime;
-            if (!triggered && timer >= 180f)
+            if (!triggered && timer >= 480f)
             {
                 triggered = true;
                 MessageBox(IntPtr.Zero, "Yayyamla oyna", "Uyarı", 0);
