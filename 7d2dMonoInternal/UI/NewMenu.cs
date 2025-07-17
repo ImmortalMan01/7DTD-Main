@@ -670,6 +670,8 @@ namespace SevenDTDMono
                         Extras.LogAvailableBuffNames(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "load", "BuffsList.txt"));
                     }
 
+                    NewGUILayout.ButtonToggleDictionary("Aimbot", nameof(SettingsBools.AIMBOT));
+
                 });
 
                 NewGUILayout.DictFoldMenuHorizontal("TestMenu3", "bool_TestFold2", () =>

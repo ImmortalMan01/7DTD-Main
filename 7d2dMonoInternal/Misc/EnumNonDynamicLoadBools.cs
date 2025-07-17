@@ -26,6 +26,7 @@ namespace SevenDTDMono
         CHEAT_BUFFS_LOADED,
         BUFF_CLASSES_LOADED,
         PROGRESSION_VALUE_LOADED,
-        NAME_SCRAMBLE
+        NAME_SCRAMBLE,
+        AIMBOT
     }
 }
