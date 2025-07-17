@@ -223,7 +223,10 @@ namespace SevenDTDMono.Features
             }
 
             // Compensate for bullet drop by aiming slightly above the target
-            if (Camera.main)
+            // Only apply when movement prediction is enabled so disabling the
+            // feature results in fully "raw" aiming.
+            if (Camera.main &&
+                SettingsInstance.GetBoolValue(nameof(SettingsBools.MOVEMENT_PREDICTION)))
             {
                 Vector3 from = Camera.main.transform.position;
                 float distance = Vector3.Distance(from, target);
