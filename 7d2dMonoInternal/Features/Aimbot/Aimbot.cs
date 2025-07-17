@@ -37,7 +37,19 @@ namespace SevenDTDMono.Features
 
             EntityAlive bestZombie = null;
             float minAngle = float.MaxValue;
+
+            // Use the camera as the reference point for aiming. In first person
+            // mode the camera's forward vector represents the actual crosshair
+            // direction which may differ from the player transform orientation.
             Vector3 playerHead = Player.emodel.GetHeadTransform().position;
+            Vector3 referencePos = playerHead;
+            Vector3 referenceForward = Player.transform.forward;
+            if (Camera.main)
+            {
+                referencePos = Camera.main.transform.position;
+                referenceForward = Camera.main.transform.forward;
+            }
+
             float maxAngle = SettingsInstance.AimbotFov * 0.5f;
 
             foreach (EntityAlive zombie in NewSettings.EntityAlive)
@@ -48,8 +60,8 @@ namespace SevenDTDMono.Features
                 }
 
                 Vector3 head = zombie.emodel.GetHeadTransform().position;
-                Vector3 direction = head - playerHead;
-                float angle = Vector3.Angle(Player.transform.forward, direction);
+                Vector3 direction = head - referencePos;
+                float angle = Vector3.Angle(referenceForward, direction);
                 if (angle > maxAngle)
                 {
                     continue;
@@ -83,7 +95,7 @@ namespace SevenDTDMono.Features
                         break;
                 }
 
-                Vector3 direction = targetPos - playerHead;
+                Vector3 direction = targetPos - referencePos;
                 Quaternion look = Quaternion.LookRotation(direction);
 
                 // Smoothly rotate the player towards the target. Directly
