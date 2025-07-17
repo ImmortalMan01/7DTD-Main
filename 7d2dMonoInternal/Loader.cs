@@ -40,6 +40,7 @@ namespace SevenDTDMono
             gameObject.AddComponent<Features.Aimbot>();
             gameObject.AddComponent<Features.Magic.MagicBullet>();
             gameObject.AddComponent<Features.Weapon.NoRecoil>();
+            gameObject.AddComponent<Features.AutoQuit>();
 
             //gameObject.AddComponent<SceneDebugger>();
             //gameObject.AddComponent<CBuffs>();

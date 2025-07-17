@@ -324,6 +324,7 @@
     <Compile Include="Features\Render\Visuals.cs" />
     <Compile Include="Features\Render\Render.cs" />
     <Compile Include="Features\Weapon\NoRecoil.cs" />
+    <Compile Include="Features\AutoQuit.cs" />
     <None Include="Directory.Build.props" />
     <None Include="FileName.cs" />
     <Compile Include="GuiLayoutExtended\GUIFoldableMenu.cs" />
