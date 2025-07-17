@@ -15,8 +15,19 @@ namespace SevenDTDMono.Features
         public static Vector3 StartPos { get; private set; }
         public static Vector3 TargetPos { get; private set; }
 
-        // Approximated projectile speed used for movement prediction
-        private readonly float projectileSpeed = 60f;
+        // Approximated projectile speed used for movement prediction.
+        // The value is updated each frame based on the currently held gun
+        // to improve accuracy of movement and bullet drop compensation.
+        private float projectileSpeed = 60f;
+
+        // Potential field names for projectile velocity on the gun class
+        private static readonly string[] projectileSpeedFieldNames =
+        {
+            "projectileVelocity",
+            "bulletVelocity",
+            "muzzleVelocity",
+            "velocity"
+        };
 
         // Cache previous positions to estimate entity velocity
         private readonly Dictionary<int, Vector3> previousPositions = new Dictionary<int, Vector3>();
@@ -30,6 +41,9 @@ namespace SevenDTDMono.Features
 
         private void Update()
         {
+            // Refresh projectile speed from the currently held weapon so that
+            // movement prediction and bullet drop compensation remain accurate
+            UpdateProjectileSpeed();
             if (!SettingsInstance.GetBoolValue(nameof(SettingsBools.AIMBOT)))
             {
                 return;
@@ -300,6 +314,39 @@ namespace SevenDTDMono.Features
             float maxDist = (Screen.height / 2f) * angleRatio;
 
             return Vector2.Distance(pos2D, center) <= maxDist;
+        }
+
+        // Attempts to read the projectile velocity from the currently held gun.
+        // If the value cannot be retrieved, the previously cached speed is kept.
+        private void UpdateProjectileSpeed()
+        {
+            try
+            {
+                var inv = Player?.inventory;
+                if (inv == null) return;
+
+                var gun = inv.GetHoldingGun();
+                if (gun == null) return;
+
+                var type = gun.GetType();
+                foreach (var name in projectileSpeedFieldNames)
+                {
+                    var field = type.GetField(name, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
+                    if (field != null && field.FieldType == typeof(float))
+                    {
+                        float value = (float)field.GetValue(gun);
+                        if (value > 0f)
+                        {
+                            projectileSpeed = value;
+                        }
+                        return;
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                UnityEngine.Debug.LogException(ex);
+            }
         }
     }
 }
