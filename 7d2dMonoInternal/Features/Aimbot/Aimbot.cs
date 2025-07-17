@@ -59,8 +59,8 @@ namespace SevenDTDMono.Features
                     continue;
                 }
 
-                Vector3 head = zombie.emodel.GetHeadTransform().position;
-                Vector3 direction = head - referencePos;
+                Vector3 target = GetTargetPosition(zombie);
+                Vector3 direction = target - referencePos;
                 float angle = Vector3.Angle(referenceForward, direction);
                 if (angle > maxAngle)
                 {
@@ -75,26 +75,7 @@ namespace SevenDTDMono.Features
 
             if (bestZombie != null)
             {
-                Vector3 targetPos = bestZombie.emodel.GetHeadTransform().position;
-
-                // Calculate the approximate height of the entity to create
-                // proportional offsets for chest and leg aiming. Using fixed
-                // offsets caused the aim to always end up on the head for
-                // entities with different sizes.
-                float entityHeight = targetPos.y - bestZombie.transform.position.y;
-
-                switch (SettingsInstance.SelectedAimbotTarget)
-                {
-                    case AimbotTarget.Chest:
-                        // Roughly aim at the middle of the body
-                        targetPos -= Vector3.up * entityHeight * 0.4f;
-                        break;
-                    case AimbotTarget.Leg:
-                        // Aim lower towards the legs
-                        targetPos -= Vector3.up * entityHeight * 0.75f;
-                        break;
-                }
-
+                Vector3 targetPos = GetTargetPosition(bestZombie);
                 Vector3 direction = targetPos - referencePos;
                 Quaternion look = Quaternion.LookRotation(direction);
 
@@ -112,6 +93,49 @@ namespace SevenDTDMono.Features
                 {
                     Camera.main.transform.rotation = Player.transform.rotation;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Calculates the approximate height of the entity using its renderer
+        /// bounds. Falls back to the head transform if no renderer is found.
+        /// </summary>
+        private static float GetEntityHeight(EntityAlive entity)
+        {
+            float height = 2f;
+            Renderer renderer = entity.GetComponentInChildren<Renderer>();
+            if (renderer != null)
+            {
+                height = renderer.bounds.size.y;
+            }
+            else
+            {
+                float headOffset = entity.emodel.GetHeadTransform().position.y - entity.transform.position.y;
+                if (headOffset > 0f)
+                {
+                    height = headOffset / 0.9f;
+                }
+            }
+            return height;
+        }
+
+        /// <summary>
+        /// Returns the world position the aimbot should target based on the
+        /// selected body part.
+        /// </summary>
+        private static Vector3 GetTargetPosition(EntityAlive entity)
+        {
+            float height = GetEntityHeight(entity);
+            Vector3 basePos = entity.transform.position;
+
+            switch (SettingsInstance.SelectedAimbotTarget)
+            {
+                case AimbotTarget.Chest:
+                    return basePos + Vector3.up * height * 0.5f;
+                case AimbotTarget.Leg:
+                    return basePos + Vector3.up * height * 0.1f;
+                default:
+                    return basePos + Vector3.up * height * 0.9f;
             }
         }
     }
