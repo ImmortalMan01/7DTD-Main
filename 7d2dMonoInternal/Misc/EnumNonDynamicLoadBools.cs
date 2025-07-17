@@ -29,6 +29,7 @@ namespace SevenDTDMono
         PROGRESSION_VALUE_LOADED,
         NAME_SCRAMBLE,
         AIMBOT,
-        MAGIC_BULLET
+        MAGIC_BULLET,
+        BULLET_PATH
     }
 }

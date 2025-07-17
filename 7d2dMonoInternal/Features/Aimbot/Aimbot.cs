@@ -10,6 +10,11 @@ namespace SevenDTDMono.Features
         private static Dictionary<string, bool> BoolDict => SettingsInstance.GetChildDictionary<bool>(nameof(Dictionaries.BOOL_DICTIONARY));
         private static EntityPlayerLocal Player => NewSettings.EntityLocalPlayer;
 
+        // Expose the latest calculated path for debug drawing
+        public static bool HasTarget { get; private set; }
+        public static Vector3 StartPos { get; private set; }
+        public static Vector3 TargetPos { get; private set; }
+
         // Hold this key for the aimbot to activate
         private readonly KeyCode activationKey = KeyCode.LeftAlt;
 
@@ -35,6 +40,7 @@ namespace SevenDTDMono.Features
                 return;
             }
 
+            HasTarget = false;
             EntityAlive bestZombie = null;
             float minAngle = float.MaxValue;
 
@@ -91,6 +97,11 @@ namespace SevenDTDMono.Features
                 {
                     Camera.main.transform.rotation = Player.transform.rotation;
                 }
+
+                // Store positions for debug drawing
+                StartPos = referencePos;
+                TargetPos = targetPos;
+                HasTarget = true;
             }
         }
 
