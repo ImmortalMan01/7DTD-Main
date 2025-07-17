@@ -49,6 +49,9 @@ namespace SevenDTDMono
         // Selected target area for the aimbot feature
         public AimbotTarget SelectedAimbotTarget = AimbotTarget.Head;
 
+        // Field of view in degrees used by the aimbot
+        public float AimbotFov = 60f;
+
 
         #endregion //define
 

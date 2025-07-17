@@ -685,6 +685,12 @@ namespace SevenDTDMono
                             {
                                 SettingsInstance.SelectedAimbotTarget = (AimbotTarget)newSelected;
                             }
+
+                            GUILayout.BeginHorizontal();
+                            GUILayout.Label($"FOV {SettingsInstance.AimbotFov:F0}", GUILayout.MaxWidth(80));
+                            SettingsInstance.AimbotFov = GUILayout.HorizontalSlider(SettingsInstance.AimbotFov, 10f, 120f, GUILayout.Width(150));
+                            GUILayout.EndHorizontal();
+
                         }, ref aimbotSettingsDropdown);
                     }
 

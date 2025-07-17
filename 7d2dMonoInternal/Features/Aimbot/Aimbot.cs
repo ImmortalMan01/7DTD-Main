@@ -38,6 +38,7 @@ namespace SevenDTDMono.Features
             EntityAlive bestZombie = null;
             float minAngle = float.MaxValue;
             Vector3 playerHead = Player.emodel.GetHeadTransform().position;
+            float maxAngle = SettingsInstance.AimbotFov * 0.5f;
 
             foreach (EntityAlive zombie in NewSettings.EntityAlive)
             {
@@ -49,6 +50,10 @@ namespace SevenDTDMono.Features
                 Vector3 head = zombie.emodel.GetHeadTransform().position;
                 Vector3 direction = head - playerHead;
                 float angle = Vector3.Angle(Player.transform.forward, direction);
+                if (angle > maxAngle)
+                {
+                    continue;
+                }
                 if (angle < minAngle)
                 {
                     minAngle = angle;
