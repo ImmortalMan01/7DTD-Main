@@ -21,6 +21,7 @@ namespace SevenDTDMono
         FOV_CIRCLE,
         CROSS_HAIR,
         NO_WEAPON_BOB,
+        NO_RECOIL,
         CHAMS,
         CHEAT_BUFF,
         CHEAT_BUFFS_LOADED,

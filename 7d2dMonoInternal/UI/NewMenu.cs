@@ -469,6 +469,7 @@ namespace SevenDTDMono
                     NewGUILayout.DropDownForMethods("Aimbot Settings", () =>
                     {
                         NewGUILayout.ButtonToggleDictionary("Magic Bullet", nameof(SettingsBools.MAGIC_BULLET));
+                        NewGUILayout.ButtonToggleDictionary("No Recoil", nameof(SettingsBools.NO_RECOIL));
                         string[] targets = System.Enum.GetNames(typeof(AimbotTarget));
                         int selected = (int)SettingsInstance.SelectedAimbotTarget;
                         int newSelected = GUILayout.Toolbar(selected, targets);
