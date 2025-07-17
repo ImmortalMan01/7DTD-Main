@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SevenDTDMono.Features.Render
@@ -13,6 +14,8 @@ namespace SevenDTDMono.Features.Render
         private int _Color;
         private float lastChamTime;
         private Material chamsMaterial;
+        private readonly Dictionary<Renderer, Material[]> originalMaterials = new Dictionary<Renderer, Material[]>();
+        private bool chamsEnabled;
         #endregion
 
 
@@ -20,6 +23,8 @@ namespace SevenDTDMono.Features.Render
         {
 
             Debug.LogWarning($"Start: {nameof(Visuals)}");
+
+            chamsEnabled = false;
 
             lastChamTime = Time.time + 10f;
 
@@ -41,7 +46,7 @@ namespace SevenDTDMono.Features.Render
             chamsMaterial.SetInt("_ZWrite", 0);
             chamsMaterial.SetColor(_Color, Color.magenta);
         }
-        private void Update() 
+        private void Update()
         {
             /*if (!Input.anyKey || !Input.anyKeyDown) {
                 return;
@@ -54,7 +59,16 @@ namespace SevenDTDMono.Features.Render
 
 
 
-            if (Time.time >= lastChamTime && NewSettings.Instance.GetBoolValue(nameof(SettingsBools.CHAMS)))
+            bool setting = NewSettings.Instance.GetBoolValue(nameof(SettingsBools.CHAMS));
+
+            if (!setting && chamsEnabled)
+            {
+                RemoveChams();
+            }
+
+            chamsEnabled = setting;
+
+            if (Time.time >= lastChamTime && setting)
             {
                 foreach (Entity entity in FindObjectsOfType<Entity>())
                 {
@@ -83,10 +97,34 @@ namespace SevenDTDMono.Features.Render
         }
         private void ApplyChams(Entity entity, Color color)  //applying chams
         {
-            foreach (Renderer renderer in entity.GetComponentsInChildren<Renderer>()) {
-                renderer.material = chamsMaterial;
+            foreach (Renderer renderer in entity.GetComponentsInChildren<Renderer>())
+            {
+                if (!originalMaterials.ContainsKey(renderer))
+                {
+                    originalMaterials[renderer] = renderer.sharedMaterials;
+                }
+
+                var mats = renderer.materials;
+                for (int i = 0; i < mats.Length; i++)
+                {
+                    mats[i] = chamsMaterial;
+                }
+                renderer.materials = mats;
+
                 renderer.material.SetColor(_Color, color);
             }
+        }
+
+        private void RemoveChams()
+        {
+            foreach (var pair in originalMaterials)
+            {
+                if (pair.Key)
+                {
+                    pair.Key.materials = pair.Value;
+                }
+            }
+            originalMaterials.Clear();
         }
     }
 }
