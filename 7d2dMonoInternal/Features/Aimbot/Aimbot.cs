@@ -137,11 +137,18 @@ namespace SevenDTDMono.Features
 
                 if (SettingsInstance.SelectedAimbotMode == AimbotMode.Normal)
                 {
-                    // Instantly rotate the player and camera to face the target
-                    Player.transform.rotation = look;
+                    // Smoothly rotate the player and camera to face the target
+                    Player.transform.rotation = Quaternion.Slerp(
+                        Player.transform.rotation,
+                        look,
+                        rotationSpeed * Time.deltaTime);
+
                     if (Camera.main)
                     {
-                        Camera.main.transform.rotation = look;
+                        Camera.main.transform.rotation = Quaternion.Slerp(
+                            Camera.main.transform.rotation,
+                            look,
+                            rotationSpeed * Time.deltaTime);
                     }
                 }
                 else if (SettingsInstance.SelectedAimbotMode == AimbotMode.Silent && Input.GetMouseButtonDown(0))
